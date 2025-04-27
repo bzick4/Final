@@ -47,6 +47,7 @@ public class WeaponEquipTwoHandedIK : MonoBehaviour
 
     private IEnumerator DrawWeaponCoroutine()
     {
+        weaponInHand = true;
         isBusy = true;
         ikActive = true;
 
@@ -61,7 +62,7 @@ public class WeaponEquipTwoHandedIK : MonoBehaviour
 
         ikActive = false;
         currentIKWeight = 0f;
-        weaponInHand = true;
+        
         isBusy = false;
     }
 
@@ -69,6 +70,7 @@ public class WeaponEquipTwoHandedIK : MonoBehaviour
     private IEnumerator HolsterWeaponCoroutine()
     {
         isBusy = true;
+        weaponInHand = false;
         ikActive = false;
 
         _animator.SetTrigger("Unequip");
@@ -82,7 +84,7 @@ public class WeaponEquipTwoHandedIK : MonoBehaviour
         _Weapon.localPosition = Vector3.zero;
         _Weapon.localRotation = Quaternion.identity;
 
-        weaponInHand = false;
+       
         isBusy = false;
     }
 

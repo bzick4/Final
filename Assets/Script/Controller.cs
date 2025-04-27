@@ -2,43 +2,66 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
-
-    [SerializeField] private float _Speed = 5f;
-    [SerializeField] private float  _RunSpeed = 9f;
-
+    [Header("Player Movement")]
+    [SerializeField] private float _Speed = 3f;
+    [SerializeField] private float  _RunSpeed = 5f;
     private float _currentSpeed;
+    private bool _isRun;
+
+    [Header("Gravity")]
+    [SerializeField] private float _FallThreshold = 5f;
+    [SerializeField] private float _gravity = -9.81f;
+    [SerializeField] private float _jumpHeight = 15f;
+    private float _fallStartHeight;
+    private Vector3 _velocityMove;
+    private Vector3 _horizontalMove;
+    private bool _isGrounded;
+
+    [Header("Srcipts")]
     private Animator _animator;
-    private Vector3 _velocity;
     private CharacterController _characterController;
     private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK;
 
-    private bool _isRun;
+    
 
-    void Start()
+    private void Start()
     {
         _animator = GetComponent<Animator>();
         _weaponEquipTwoHandedIK = GetComponent<WeaponEquipTwoHandedIK>();
         _characterController = GetComponent<CharacterController>();
         _currentSpeed = _Speed;
         _isRun = false;
-        
-        
     }
 
-       void Update()
+    private void Update()
     {
+        Falling();
         PlayerMovement();
+        Jump();
     }
 
     private void PlayerMovement()
     {
+   
+
     float _horiz = Input.GetAxis("Horizontal");
-    _isRun = Input.GetKey(KeyCode.RightShift);
+    
+     if (_weaponEquipTwoHandedIK.weaponInHand)
+    {
+        _isRun = false;
+        _currentSpeed = _Speed;
+    }
+    else
+    {
+        _isRun = Input.GetKey(KeyCode.RightShift);
+    }
+
+
     _currentSpeed = _isRun ? _RunSpeed : _Speed;
 
-    _velocity = new Vector3(_horiz * _currentSpeed, 0, 0);
+     _horizontalMove = new Vector3(_horiz * _currentSpeed, 0, 0);
     
-    _characterController.Move(_velocity * Time.deltaTime);
+    _characterController.Move(_horizontalMove * Time.deltaTime);
 
     if (_horiz > 0)
     {
@@ -48,14 +71,123 @@ public class Controller : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(0, -90, 0);
     }
-    float lockomotionValue = _isRun ? 2f : Mathf.Abs(_horiz);
-    if (_weaponEquipTwoHandedIK.weaponInHand)
-    {
-        lockomotionValue = Mathf.Min(lockomotionValue, 0.5f);
+
+    _animator.SetFloat("Lockomotion", _isRun ? 2f : Mathf.Abs(_horiz), 0.2f, Time.deltaTime);
     }
 
-    _animator.SetFloat("Lockomotion", lockomotionValue, 0.2f, Time.deltaTime);
-
+   private void Jump()
+{
     
+    _isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, 0.3f);
+
+    if (_isGrounded && _velocityMove.y < 0)
+    {
+        _velocityMove.y = -2f; // Сбрасываем вертикальную скорость
     }
+
+    if (Input.GetKeyDown(KeyCode.UpArrow) && _isGrounded  && _horizontalMove.x == 0)
+    {
+       _velocityMove.y = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
+
+     if (_weaponEquipTwoHandedIK.weaponInHand == true)
+        {
+            _animator.SetTrigger("JumpWeapon");
+        }
+        else
+        {
+            _animator.SetTrigger("Jump");
+        }
+    }
+
+     if (Input.GetKeyDown(KeyCode.UpArrow) && _isGrounded && _horizontalMove.x > 0)
+     {
+       _velocityMove.y = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
+    
+      if (_weaponEquipTwoHandedIK.weaponInHand== true)
+        {
+            _animator.SetTrigger("RunJumpWeapon");
+        }
+        else
+        {
+            _animator.SetTrigger("RunJump");
+        }
+     }  
+
+     if(Input.GetKeyDown(KeyCode.UpArrow) && _isGrounded && _horizontalMove.x < 0)
+     {
+       _velocityMove.y = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
+    
+      if (_weaponEquipTwoHandedIK.weaponInHand == true)
+        {
+            _animator.SetTrigger("RunJumpWeapon");
+        }
+        else
+        {
+            _animator.SetTrigger("RunJump");
+        }
+   }
+
+
+    // Применяем гравитацию
+    _velocityMove.y += _gravity * Time.deltaTime;
+
+    // Применяем движение
+    _characterController.Move(_velocityMove * Time.deltaTime);
+}
+
+private void Falling()
+{
+    if (!_isGrounded && _velocityMove.y < 0)
+    {
+       if (_fallStartHeight == 0)
+        {
+            _fallStartHeight = transform.position.y; 
+        }
+
+        if (_weaponEquipTwoHandedIK.weaponInHand == true)
+        {
+            _animator.SetBool("FallingWeapon", true);
+        }
+        else
+        {
+            _animator.SetBool("Falling", true);
+        }
+    }
+    // Если персонаж приземлился
+    else if (_isGrounded)
+    {
+        if(_weaponEquipTwoHandedIK.weaponInHand == true)
+        {
+            _animator.SetBool("FallingWeapon", false);
+        }
+        else
+        {
+            _animator.SetBool("Falling", false);
+        }
+       
+
+        if (_fallStartHeight > 0)
+        {
+            float fallDistance = _fallStartHeight - transform.position.y;
+
+            if (fallDistance > _FallThreshold)
+            {
+                if (_weaponEquipTwoHandedIK.weaponInHand == true)
+                {
+                    _animator.SetTrigger("RollWeapon");
+                }
+                else
+                {
+                    _animator.SetTrigger("Roll");
+                }
+            }
+            Debug.Log($"Fall distance: {fallDistance}");
+            _fallStartHeight = 0;
+        }
+    }
+}
+
+
+
+
 }
