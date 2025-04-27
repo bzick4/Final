@@ -8,6 +8,7 @@ public class WeaponEquipTwoHandedIK : MonoBehaviour
     [SerializeField] private Transform _HandHolder;
     [SerializeField] private Transform _RightHandTarget;
     [SerializeField] private Transform _LeftHandIKTarget;
+    [SerializeField] private GameObject _Shield;
 
 
     private Animator _animator;
@@ -37,24 +38,37 @@ public class WeaponEquipTwoHandedIK : MonoBehaviour
             if (weaponInHand)
             {
                 StartCoroutine(HolsterWeaponCoroutine());
+                 _Shield.SetActive(false);
+                
+                
             }
             else
             {
+                
+                 StartCoroutine(ActiveShield());
                 StartCoroutine(DrawWeaponCoroutine());
             }
         }
     }
 
+    private IEnumerator ActiveShield()
+    {
+        yield return new WaitForSeconds(1.5f);
+        _Shield.SetActive(true);
+        
+    }
+
     private IEnumerator DrawWeaponCoroutine()
     {
+    
         weaponInHand = true;
         isBusy = true;
         ikActive = true;
 
         _animator.SetTrigger("Equip");
+        
 
-        yield return new WaitForSeconds(timeToDrawWeapon);
-       
+        yield return new WaitForSeconds(timeToDrawWeapon);   
 
         _Weapon.SetParent(_HandHolder);
         _Weapon.localPosition = Vector3.zero;

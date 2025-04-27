@@ -21,6 +21,7 @@ public class Controller : MonoBehaviour
     private Animator _animator;
     private CharacterController _characterController;
     private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK;
+    private Health _health;
 
     
 
@@ -29,6 +30,7 @@ public class Controller : MonoBehaviour
         _animator = GetComponent<Animator>();
         _weaponEquipTwoHandedIK = GetComponent<WeaponEquipTwoHandedIK>();
         _characterController = GetComponent<CharacterController>();
+        _health = GetComponent<Health>();
         _currentSpeed = _Speed;
         _isRun = false;
     }
@@ -187,7 +189,29 @@ private void Falling()
     }
 }
 
+private void OnEnable()
+    { 
+        if (_health != null) 
+        { 
+            Health.OnDamage += Dead;
+        } 
+    }
 
+    private void OnDisable()
+    {
+        if (_health != null)
+        {
+            Health.OnDamage -= Dead;
+        }
+    }
+    
+    private void Dead()
+    {
+        if (_health._currentHealth <=0)
+        {
+            Debug.Log("Dead");
+        }
+    }
 
 
 }
