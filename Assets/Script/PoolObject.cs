@@ -11,7 +11,6 @@ public class PoolObject : MonoBehaviour
 
     private void Start()
     {
-        // Инициализация пула
         for (int i = 0; i < _PoolSize; i++)
         {
             GameObject obj = Instantiate(_Bullet);
@@ -20,7 +19,6 @@ public class PoolObject : MonoBehaviour
         }
     }
 
-    // Получить объект из пула
     public GameObject GetObject()
     {
         if (pool.Count > 0)
@@ -31,18 +29,17 @@ public class PoolObject : MonoBehaviour
         }
         else
         {
-            // Если пул пуст, создаём новый объект (опционально)
             GameObject obj = Instantiate(_Bullet);
             obj.SetActive(true);
             return obj;
         }
     }
 
-    // Вернуть объект в пул
     public void ReturnObject(GameObject obj)
     {
         obj.SetActive(false);
         pool.Enqueue(obj);
     }
+
 }
 

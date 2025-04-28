@@ -1,11 +1,15 @@
+
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
     [SerializeField] private float _MaxHealth;
-     public float _currentHealth{ get; set;}
+    [SerializeField] private Image _ImageHP;
 
+     public float _currentHealth{ get; set;}
+     
      private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK;
      
     public static Action OnDamage;
@@ -23,26 +27,24 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (_weaponEquipTwoHandedIK !=null)
+        if (_weaponEquipTwoHandedIK !=null && _weaponEquipTwoHandedIK.weaponInHand)
         {
-            if (_weaponEquipTwoHandedIK.weaponInHand)
-            {
-                _currentHealth -= damage * 0.5f;
-                OnDamage?.Invoke();
-            }
-        
+            _currentHealth -= damage * 0.5f;
+            UpdateHpBar();
+            OnDamage?.Invoke();
+        }
+    
         else
         {
             _currentHealth -= damage;
+            UpdateHpBar();
             OnDamage?.Invoke();
         }
-        }
-
-        
-
-
-       
     }
 
+    public void UpdateHpBar()
+    {
+        _ImageHP.fillAmount = _currentHealth / _MaxHealth; 
+    }
 
 }

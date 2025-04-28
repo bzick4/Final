@@ -26,10 +26,14 @@ public class Shoot : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && _weaponEquipTwoHandedIK.weaponInHand) // ЛКМ для выстрела
+        if(_weaponEquipTwoHandedIK != null)
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0) && _weaponEquipTwoHandedIK.weaponInHand) // ЛКМ для выстрела
         {
             ActiveShoot();
         }
+        }
+        
     }
 
     private void ActiveShoot()
@@ -50,18 +54,17 @@ public class Shoot : MonoBehaviour
 
     private IEnumerator ReturnBulletToPool(GameObject bullet, float delay)
     {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(0.9f);
         _BulletPool.ReturnObject(bullet);
     }
 
     private void ShootEnemy()
     {
-        Ray ray = new Ray(_FirePoint.position, _FirePoint.up); // Создаём рейкаст
+        Ray ray = new Ray(_FirePoint.position, _FirePoint.up);
         if (Physics.Raycast(ray, out RaycastHit hit, _RayLength, _HeroLayer))
         {
             Debug.Log($"Raycast hit: {hit.collider.name}");
 
-            // Проверяем, есть ли у объекта компонент Health
             Health heroHealth = hit.collider.GetComponentInParent<Health>();
             if (heroHealth != null)
             {
@@ -73,7 +76,7 @@ public class Shoot : MonoBehaviour
             Debug.Log("Raycast missed.");
         }
 
-        Debug.DrawRay(_FirePoint.position, _FirePoint.up * _RayLength, Color.green, 10f);
+        Debug.DrawRay(_FirePoint.position, _FirePoint.up * _RayLength, Color.green, 4f);
     
     }
 
@@ -82,7 +85,7 @@ public class Shoot : MonoBehaviour
     while (true)
     {
         ShootEnemy();
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.5f);
     }
 }
     
