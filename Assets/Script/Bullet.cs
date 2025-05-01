@@ -7,8 +7,8 @@ public class Bullet : MonoBehaviour
    {
     if(other.GetComponent<Health>() != null)
     {
-        Health health = other.GetComponentInParent<Health>();
-        health.TakeDamage(20);
+        Health health = other.GetComponent<Health>();
+        health.TakeDamage(16);
     }
 
     PoolObject pool = FindObjectOfType<PoolObject>();

@@ -16,23 +16,35 @@ public class Controller : MonoBehaviour
     private Vector3 _velocityMove;
     private Vector3 _horizontalMove;
     private bool _isGrounded;
+    private bool _isAlive=true;
 
     [Header("Srcipts")]
     private Animator _animator;
     private CharacterController _characterController;
     private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK;
+    private RagdollHandler _ragdollHandler;
     private Health _health;
 
-    
+    private CapsuleCollider _capsuleColliderHero;
+    private Collider _colliderHero;
 
-    private void Start()
+    private void Awake()
     {
         _animator = GetComponent<Animator>();
         _weaponEquipTwoHandedIK = GetComponent<WeaponEquipTwoHandedIK>();
         _characterController = GetComponent<CharacterController>();
+        _capsuleColliderHero = GetComponent<CapsuleCollider>();
+        _colliderHero = GetComponent<Collider>();
+        
         _health = GetComponent<Health>();
         _currentSpeed = _Speed;
         _isRun = false;
+    }
+
+    private void Start()
+    {
+        _ragdollHandler = GetComponentInChildren<RagdollHandler>();
+        _ragdollHandler.Instalize();
     }
 
     private void Update()
@@ -45,7 +57,8 @@ public class Controller : MonoBehaviour
     private void PlayerMovement()
     {
    
-
+if (_isAlive)
+{
     float _horiz = Input.GetAxis("Horizontal");
     
      if (_weaponEquipTwoHandedIK.weaponInHand)
@@ -76,8 +89,9 @@ public class Controller : MonoBehaviour
 
     _animator.SetFloat("Lockomotion", _isRun ? 2f : Mathf.Abs(_horiz), 0.2f, Time.deltaTime);
     }
+    }
 
-   private void Jump()
+    private void Jump()
 {
     
     _isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, 0.3f);
@@ -137,7 +151,7 @@ public class Controller : MonoBehaviour
     _characterController.Move(_velocityMove * Time.deltaTime);
 }
 
-private void Falling()
+    private void Falling()
 {
     if (!_isGrounded && _velocityMove.y < 0)
     {
@@ -189,7 +203,7 @@ private void Falling()
     }
 }
 
-private void OnEnable()
+    private void OnEnable()
     { 
         if (_health != null) 
         { 
@@ -209,7 +223,15 @@ private void OnEnable()
     {
         if (_health._currentHealth <=0)
         {
+            _isAlive = false;
             Debug.Log("Dead");
+
+            _ragdollHandler.EnableRagdoll();
+            _animator.enabled = false;
+            _capsuleColliderHero.enabled = false;
+            _colliderHero.enabled = false;
+            _characterController.enabled = false;
+            
         }
     }
 

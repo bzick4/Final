@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shoot : MonoBehaviour
 {
   
-    [SerializeField] private PoolObject _BulletPool; // Ссылка на пул объектов
+     private PoolObject _BulletPool; // Ссылка на пул объектов
     [SerializeField] private Transform _FirePoint; // Точка выстрела
     [SerializeField] private float _BulletSpeed = 10;
     private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK;
@@ -16,6 +16,11 @@ public class Shoot : MonoBehaviour
     [SerializeField] private float _RayLength = 10f; // Длина рейкаста
     [SerializeField] private LayerMask _HeroLayer; 
 
+    private void Awake()
+    {
+        _BulletPool = FindObjectOfType<PoolObject>();
+        
+    }
     private void Start()
     {
         _weaponEquipTwoHandedIK = GetComponent<WeaponEquipTwoHandedIK>();
@@ -38,7 +43,9 @@ public class Shoot : MonoBehaviour
 
     private void ActiveShoot()
     {
+
         GameObject bullet = _BulletPool.GetObject();
+
 
         bullet.transform.position = _FirePoint.position;
         bullet.transform.rotation = _FirePoint.rotation;
