@@ -22,7 +22,7 @@ public class UseBottle : MonoBehaviour
 
     private void CureHero()
     {
-        _heroHealth?.TakeDamage(-40);
+        _heroHealth?.TakeDamage(-400);
     }
     
     private void DrinkHealBottle()

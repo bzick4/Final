@@ -3,12 +3,15 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = System.Random;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] private float _MaxHealth;
+    private float _MaxHealth = 1000;
     [SerializeField] private Image _ImageHP;
     [SerializeField] private Image _ImageHPBackground;
+
+
     
 
      public float _currentHealth{ get; set;}
@@ -36,11 +39,12 @@ public class Health : MonoBehaviour
 
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float _damage)
     {
+        
         if (_weaponEquipTwoHandedIK !=null && _weaponEquipTwoHandedIK.weaponInHand)
         {
-            _currentHealth -= damage * 0.5f;
+            _currentHealth -= _damage * 0.5f;
             _currentHealth = Mathf.Clamp(_currentHealth, 0, _MaxHealth);
             UpdateHpBar();
        
@@ -50,10 +54,10 @@ public class Health : MonoBehaviour
     
         else
         {
-            _currentHealth -= damage;
+            _currentHealth -= _damage;
             _currentHealth = Mathf.Clamp(_currentHealth, 0, _MaxHealth);
             UpdateHpBar();
-            
+          
             Debug.Log("OnDamage event invoked with weapon in hand");
             OnDamage?.Invoke();
         }
