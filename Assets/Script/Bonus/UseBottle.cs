@@ -4,16 +4,10 @@ using UnityEngine;
 
 public class UseBottle : MonoBehaviour
 {
-    private HealtBottleManeger _totalBottle, _healBottle;
-    private Health _heroHealth;
-    
-    private void Awake()
-    {
-        _heroHealth = GetComponent<Health>();
-        _healBottle = GetComponentInChildren<HealtBottleManeger>();
-        _totalBottle = GetComponentInChildren<HealtBottleManeger>();
-    }
-
+    private HealtBottleManeger _totalBottle => GetComponentInChildren<HealtBottleManeger>();
+    private HealtBottleManeger _healBottle => GetComponentInChildren<HealtBottleManeger>();
+    private Health _heroHealth => GetComponent<Health>();
+    private SoundManager _soundManager => FindAnyObjectByType<SoundManager>();
     private void Update()
     {
         DrinkHealBottle();
@@ -22,7 +16,8 @@ public class UseBottle : MonoBehaviour
 
     private void CureHero()
     {
-        _heroHealth?.TakeDamage(-400);
+        _heroHealth?.Heal(400);
+        _soundManager.SoundHeal();
     }
     
     private void DrinkHealBottle()

@@ -5,27 +5,23 @@ using UnityEngine;
 public class Shoot : MonoBehaviour
 {
   
-     private PoolObject _BulletPool; // Ссылка на пул объектов
+    
     [SerializeField] private Transform _FirePoint; // Точка выстрела
     [SerializeField] private float _BulletSpeed = 10;
-    private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK;
-    private Health _health;
-     private Animator _animator;
-
 
     [SerializeField] private float _RayLength = 10f; // Длина рейкаста
     [SerializeField] private LayerMask _HeroLayer; 
 
-    private void Awake()
-    {
-        _BulletPool = FindObjectOfType<PoolObject>();
-        
-    }
+    private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK => GetComponent<WeaponEquipTwoHandedIK>();
+    private PoolObject _BulletPool=> FindObjectOfType<PoolObject>();
+    private Health _health => GetComponent<Health>();
+    private Animator _animator => GetComponent<Animator>();
+    private SoundManager _soundManager => FindObjectOfType<SoundManager>();
+
+
+
     private void Start()
     {
-        _weaponEquipTwoHandedIK = GetComponent<WeaponEquipTwoHandedIK>();
-        _animator = GetComponent<Animator>();  
-        _health = GetComponent<Health>(); 
         StartCoroutine(CallShootEnemyRepeatedly());
     }
 
@@ -46,6 +42,7 @@ public class Shoot : MonoBehaviour
 
         GameObject bullet = _BulletPool.GetObject();
 
+        _soundManager.SoundHit();
 
         bullet.transform.position = _FirePoint.position;
         bullet.transform.rotation = _FirePoint.rotation;

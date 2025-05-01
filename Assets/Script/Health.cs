@@ -11,18 +11,14 @@ public class Health : MonoBehaviour
     [SerializeField] private Image _ImageHP;
     [SerializeField] private Image _ImageHPBackground;
 
-
-    
-
      public float _currentHealth{ get; set;}
      
-     private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK;
+     private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK => GetComponent<WeaponEquipTwoHandedIK>();
      
     public static Action OnDamage;
 
     private void Start()
     {
-        _weaponEquipTwoHandedIK = GetComponent<WeaponEquipTwoHandedIK>();
         _currentHealth = _MaxHealth;
     }
 
@@ -41,26 +37,12 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(float _damage)
     {
-        
-        if (_weaponEquipTwoHandedIK !=null && _weaponEquipTwoHandedIK.weaponInHand)
-        {
-            _currentHealth -= _damage * 0.5f;
-            _currentHealth = Mathf.Clamp(_currentHealth, 0, _MaxHealth);
-            UpdateHpBar();
-       
-            Debug.Log("OnDamage event invoked with weapon in hand");
-            OnDamage?.Invoke();
-        }
-    
-        else
-        {
-            _currentHealth -= _damage;
-            _currentHealth = Mathf.Clamp(_currentHealth, 0, _MaxHealth);
-            UpdateHpBar();
-          
-            Debug.Log("OnDamage event invoked with weapon in hand");
-            OnDamage?.Invoke();
-        }
+        _currentHealth -= _weaponEquipTwoHandedIK !=null && _weaponEquipTwoHandedIK.weaponInHand ? _damage * 0.5f : _damage;
+
+        _currentHealth = Mathf.Clamp(_currentHealth, 0, _MaxHealth);
+         UpdateHpBar();
+         OnDamage?.Invoke();
+         Debug.Log(_damage);
     }
 
     public void UpdateHpBar()
@@ -85,6 +67,13 @@ public class Health : MonoBehaviour
 
     _ImageHP.fillAmount = targetFill;
 }
+
+    public void Heal(float _heal)
+    {
+        _currentHealth += _heal;
+        _currentHealth = Mathf.Clamp(_currentHealth, 0, _MaxHealth);
+        UpdateHpBar();
+    }
 
 
 }

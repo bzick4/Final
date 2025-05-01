@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-   private int _randomDamage;
+   private float _randomDamage;
    private void  OnTriggerEnter(Collider other)
    {
     _randomDamage = Random.Range(150, 301);

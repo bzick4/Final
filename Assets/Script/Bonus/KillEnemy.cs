@@ -5,7 +5,7 @@ public class KillEnemy : MonoBehaviour, IBonus
 {
    [SerializeField] private TMP_Text _Frag;
 
-    private int _frag;
+    public int _frag { get; set; }
     
     public void AddBonus(int bonus)
     {

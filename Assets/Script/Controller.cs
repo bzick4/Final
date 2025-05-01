@@ -18,32 +18,23 @@ public class Controller : MonoBehaviour
     private bool _isGrounded;
     private bool _isAlive=true;
 
-    [Header("Srcipts")]
-    private Animator _animator;
-    private CharacterController _characterController;
-    private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK;
-    private RagdollHandler _ragdollHandler;
-    private Health _health;
-
-    private CapsuleCollider _capsuleColliderHero;
-    private Collider _colliderHero;
+    // Script
+    private Animator _animator => GetComponent<Animator>();
+    private CharacterController _characterController => GetComponent<CharacterController>();
+    private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK => GetComponent<WeaponEquipTwoHandedIK>();
+    private RagdollHandler _ragdollHandler => GetComponentInChildren<RagdollHandler>();
+    private Health _health => GetComponent<Health>();
+    private CapsuleCollider _capsuleColliderHero => GetComponent<CapsuleCollider>();
+    private Collider _colliderHero => GetComponent<Collider>();
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
-        _weaponEquipTwoHandedIK = GetComponent<WeaponEquipTwoHandedIK>();
-        _characterController = GetComponent<CharacterController>();
-        _capsuleColliderHero = GetComponent<CapsuleCollider>();
-        _colliderHero = GetComponent<Collider>();
-        
-        _health = GetComponent<Health>();
         _currentSpeed = _Speed;
         _isRun = false;
     }
 
     private void Start()
     {
-        _ragdollHandler = GetComponentInChildren<RagdollHandler>();
         _ragdollHandler.Instalize();
     }
 
