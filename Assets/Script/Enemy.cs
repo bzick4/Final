@@ -50,10 +50,10 @@ public class Enemy : MonoBehaviour
             _isDead = true;
             int _randomLoot = Random.Range(0,3);
              int _randomPoints = Random.Range(100, 301);
-
+             
+             _enemyAnimator.enabled = false;
             _ragdollHandler.EnableRagdoll();
-            _enemyAnimator.enabled = false;
-
+           
             _soundManager.SoundDeath();
 
             _killEnemy.AddBonus(1);

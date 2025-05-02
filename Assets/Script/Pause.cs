@@ -4,6 +4,7 @@ public class Pause : MonoBehaviour
 {
     [SerializeField] private GameObject _PauseMenu;
     private SoundManager _soundManager => FindObjectOfType<SoundManager>();
+
     private bool isPause = false;
 
     private void Update()
@@ -25,7 +26,7 @@ public class Pause : MonoBehaviour
         }
     }
     
-    private void PauseOn()
+    public void ScriptOff()
     {
         foreach (var health in FindObjectsOfType<Health>())
         {
@@ -42,10 +43,6 @@ public class Pause : MonoBehaviour
             capsuleCollider.enabled = false;
         }
 
-        foreach (var ragdollHandler in FindObjectsOfType<RagdollHandler>())
-        {
-            ragdollHandler.enabled = false;
-        }
 
         foreach (var weaponEquipTwoHandedIK in FindObjectsOfType<WeaponEquipTwoHandedIK>())
         {
@@ -57,6 +54,7 @@ public class Pause : MonoBehaviour
             bullet.enabled = false;
         }
 
+    
 
         foreach (var poolObject in FindObjectsOfType<PoolObject>())
     {
@@ -88,11 +86,10 @@ public class Pause : MonoBehaviour
         controller.enabled = false;
     }
 
-      _soundManager._SoundGame.Pause();
-      _soundManager._SoundMenu.Play();
+     
     }
 
-    private void PauseOff()
+    private void ScriptOn()
     {
         foreach (var bullet in FindObjectsOfType<Bullet>())
         {
@@ -104,14 +101,12 @@ public class Pause : MonoBehaviour
             useBottle.enabled = true;
         }
 
+
         foreach (var capsuleCollider in FindObjectsOfType<CapsuleCollider>())
         {
             capsuleCollider.enabled = true;
         }
-        foreach (var ragdollHandler in FindObjectsOfType<RagdollHandler>())
-        {
-            ragdollHandler.enabled = true;
-        }
+        
         foreach (var weaponEquipTwoHandedIK in FindObjectsOfType<WeaponEquipTwoHandedIK>())
         {
             weaponEquipTwoHandedIK.enabled = true;
@@ -149,8 +144,20 @@ public class Pause : MonoBehaviour
     }
 
    
-    _soundManager._SoundGame.Play();
-    _soundManager._SoundMenu.Stop();
+    
     }
 
+
+    private void PauseOn()
+    {
+         _soundManager._SoundGame.Pause();
+      _soundManager._SoundMenu.Play();
+        ScriptOff();
+    }
+    private void PauseOff()
+    {
+        _soundManager._SoundGame.Play();
+    _soundManager._SoundMenu.Stop();
+        ScriptOn();
+    }
 }

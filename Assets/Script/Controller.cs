@@ -27,6 +27,9 @@ public class Controller : MonoBehaviour
     private CapsuleCollider _capsuleColliderHero => GetComponent<CapsuleCollider>();
     private Collider _colliderHero => GetComponent<Collider>();
     private SoundManager _soundManager => FindObjectOfType<SoundManager>();
+    private Pause _pause => FindObjectOfType<Pause>();
+
+    [SerializeField] private GameObject _PanelLose;
 
     private void Awake()
     {
@@ -66,8 +69,8 @@ if (_isAlive)
 
     _currentSpeed = _isRun ? _RunSpeed : _Speed;
 
-     _horizontalMove = new Vector3(_horiz * _currentSpeed, 0, 0);
-    
+    _horizontalMove = new Vector3(_horiz * _currentSpeed, 0, 0);
+  //  Vector3 moveDirection = transform.right * _horiz * _currentSpeed;
     _characterController.Move(_horizontalMove * Time.deltaTime);
 
     if (_horiz > 0)
@@ -78,6 +81,16 @@ if (_isAlive)
     {
         transform.rotation = Quaternion.Euler(0, -90, 0);
     }
+
+    //  // Поворот персонажа в зависимости от направления движения
+    //     if (_horiz > 0)
+    //     {
+    //         transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+    //     }
+    //     else if (_horiz < 0)
+    //     {
+    //         transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y + 180, 0);
+    //     }
 
     _animator.SetFloat("Lockomotion", _isRun ? 2f : Mathf.Abs(_horiz), 0.2f, Time.deltaTime);
     }
@@ -216,23 +229,21 @@ if (_isAlive)
         if (_health._currentHealth <=0)
         {
             _isAlive = false;
+            _animator.enabled = false;
             Debug.Log("Dead");
 
             _ragdollHandler.EnableRagdoll();
             _soundManager.SoundDeath();
             Invoke(nameof(GameOver), 0.8f);
 
-            _animator.enabled = false;
-            _capsuleColliderHero.enabled = false;
-            _colliderHero.enabled = false;
-            _characterController.enabled = false;
         }
     }
 
     private void GameOver()
     {
         _soundManager.SoundGameOver();
-        
+        _PanelLose.SetActive(true);
+        _pause.ScriptOff();
     }
 
 
