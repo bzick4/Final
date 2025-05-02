@@ -26,6 +26,7 @@ public class Controller : MonoBehaviour
     private Health _health => GetComponent<Health>();
     private CapsuleCollider _capsuleColliderHero => GetComponent<CapsuleCollider>();
     private Collider _colliderHero => GetComponent<Collider>();
+    private SoundManager _soundManager => FindObjectOfType<SoundManager>();
 
     private void Awake()
     {
@@ -218,12 +219,20 @@ if (_isAlive)
             Debug.Log("Dead");
 
             _ragdollHandler.EnableRagdoll();
+            _soundManager.SoundDeath();
+            Invoke(nameof(GameOver), 0.8f);
+
             _animator.enabled = false;
             _capsuleColliderHero.enabled = false;
             _colliderHero.enabled = false;
             _characterController.enabled = false;
-            
         }
+    }
+
+    private void GameOver()
+    {
+        _soundManager.SoundGameOver();
+        
     }
 
 

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Shoot : MonoBehaviour
@@ -14,8 +13,7 @@ public class Shoot : MonoBehaviour
 
     private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK => GetComponent<WeaponEquipTwoHandedIK>();
     private PoolObject _BulletPool=> FindObjectOfType<PoolObject>();
-    private Health _health => GetComponent<Health>();
-    private Animator _animator => GetComponent<Animator>();
+   
     private SoundManager _soundManager => FindObjectOfType<SoundManager>();
 
 
