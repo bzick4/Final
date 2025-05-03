@@ -8,11 +8,9 @@ public class RotatePerson : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.transform.Rotate(0, 90, 0, Space.World);
-             
-             Debug.Log(other.gameObject.name);
-        }
-        
+            other.transform.Rotate(0, 90, 0); 
             
+            Debug.Log("Player entered the trigger zone.");
+        }
     }
 }

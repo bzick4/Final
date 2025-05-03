@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Controller : MonoBehaviour
@@ -7,6 +8,7 @@ public class Controller : MonoBehaviour
     [SerializeField] private float  _RunSpeed = 5f;
     private float _currentSpeed;
     private bool _isRun;
+
 
     [Header("Gravity")]
     [SerializeField] private float _FallThreshold = 5f;
@@ -24,8 +26,6 @@ public class Controller : MonoBehaviour
     private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK => GetComponent<WeaponEquipTwoHandedIK>();
     private RagdollHandler _ragdollHandler => GetComponentInChildren<RagdollHandler>();
     private Health _health => GetComponent<Health>();
-    private CapsuleCollider _capsuleColliderHero => GetComponent<CapsuleCollider>();
-    private Collider _colliderHero => GetComponent<Collider>();
     private SoundManager _soundManager => FindObjectOfType<SoundManager>();
     private Pause _pause => FindObjectOfType<Pause>();
 
@@ -51,50 +51,50 @@ public class Controller : MonoBehaviour
 
     private void PlayerMovement()
     {
-   
-if (_isAlive)
-{
-    float _horiz = Input.GetAxis("Horizontal");
+        if (_isAlive)
+        {
+            float _horiz = Input.GetAxis("Horizontal");
+
+            
+            if (_weaponEquipTwoHandedIK.weaponInHand)
+            {
+                _isRun = false;
+                _currentSpeed = _Speed;
+            }
+
+            else
+            {
+                _isRun = Input.GetKey(KeyCode.RightShift);
+            }
+            
+            _currentSpeed = _isRun ? _RunSpeed : _Speed;
+            
+            _horizontalMove = transform.forward * _horiz * _currentSpeed;
+            //_horizontalMove = new Vector3(0, 0, _horiz * _currentSpeed);
+            //_characterController.Move(_horizontalMove * Time.deltaTime);
+
     
-     if (_weaponEquipTwoHandedIK.weaponInHand)
-    {
-        _isRun = false;
-        _currentSpeed = _Speed;
-    }
-    else
-    {
-        _isRun = Input.GetKey(KeyCode.RightShift);
-    }
-
-
-    _currentSpeed = _isRun ? _RunSpeed : _Speed;
-
-    _horizontalMove = new Vector3(_horiz * _currentSpeed, 0, 0);
-  //  Vector3 moveDirection = transform.right * _horiz * _currentSpeed;
-    _characterController.Move(_horizontalMove * Time.deltaTime);
-
     if (_horiz > 0)
     {
-        transform.rotation = Quaternion.Euler(0, 90, 0);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        _characterController.Move(_horizontalMove * Time.deltaTime);
+        
     }
     else if (_horiz < 0)
     {
-        transform.rotation = Quaternion.Euler(0, -90, 0);
+        transform.rotation = Quaternion.Euler(0, -180, 0);
+        _characterController.Move(-_horizontalMove * Time.deltaTime);
     }
 
-    //  // Поворот персонажа в зависимости от направления движения
-    //     if (_horiz > 0)
-    //     {
-    //         transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
-    //     }
-    //     else if (_horiz < 0)
-    //     {
-    //         transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y + 180, 0);
-    //     }
+
+
+
+    
 
     _animator.SetFloat("Lockomotion", _isRun ? 2f : Mathf.Abs(_horiz), 0.2f, Time.deltaTime);
     }
     }
+
 
     private void Jump()
 {
