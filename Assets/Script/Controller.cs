@@ -6,6 +6,7 @@ public class Controller : MonoBehaviour
     [Header("Player Movement")]
     [SerializeField] private float _Speed = 3f;
     [SerializeField] private float  _RunSpeed = 5f;
+    public Vector3 _horizontalMove {get; set;}
     private float _currentSpeed;
     private bool _isRun;
 
@@ -16,13 +17,12 @@ public class Controller : MonoBehaviour
     [SerializeField] private float _jumpHeight = 15f;
     private float _fallStartHeight;
     private Vector3 _velocityMove;
-    private Vector3 _horizontalMove;
     private bool _isGrounded;
     private bool _isAlive=true;
 
     // Script
     private Animator _animator => GetComponent<Animator>();
-    private CharacterController _characterController => GetComponent<CharacterController>();
+    public CharacterController _characterController => GetComponent<CharacterController>();
     private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK => GetComponent<WeaponEquipTwoHandedIK>();
     private RagdollHandler _ragdollHandler => GetComponentInChildren<RagdollHandler>();
     private Health _health => GetComponent<Health>();
@@ -30,6 +30,7 @@ public class Controller : MonoBehaviour
     private Pause _pause => FindObjectOfType<Pause>();
 
     [SerializeField] private GameObject _PanelLose;
+    [SerializeField] private GameObject _Cam1, _Cam2;
 
     private void Awake()
     {
@@ -68,8 +69,8 @@ public class Controller : MonoBehaviour
             }
             
             _currentSpeed = _isRun ? _RunSpeed : _Speed;
+             _horizontalMove = transform.forward * _horiz * _currentSpeed;
             
-            _horizontalMove = transform.forward * _horiz * _currentSpeed;
             //_horizontalMove = new Vector3(0, 0, _horiz * _currentSpeed);
             //_characterController.Move(_horizontalMove * Time.deltaTime);
 
@@ -78,12 +79,16 @@ public class Controller : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(0, 0, 0);
         _characterController.Move(_horizontalMove * Time.deltaTime);
+        // _Cam1.SetActive(true);
+        // _Cam2.SetActive(false);
         
     }
     else if (_horiz < 0)
     {
         transform.rotation = Quaternion.Euler(0, -180, 0);
         _characterController.Move(-_horizontalMove * Time.deltaTime);
+        // _Cam1.SetActive(false);
+        // _Cam2.SetActive(true);
     }
 
 
