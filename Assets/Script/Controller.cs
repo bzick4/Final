@@ -79,16 +79,16 @@ public class Controller : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(0, 0, 0);
         _characterController.Move(_horizontalMove * Time.deltaTime);
-        // _Cam1.SetActive(true);
-        // _Cam2.SetActive(false);
+        _Cam1.SetActive(true);
+        _Cam2.SetActive(false);
         
     }
     else if (_horiz < 0)
     {
         transform.rotation = Quaternion.Euler(0, -180, 0);
         _characterController.Move(-_horizontalMove * Time.deltaTime);
-        // _Cam1.SetActive(false);
-        // _Cam2.SetActive(true);
+        _Cam1.SetActive(false);
+        _Cam2.SetActive(true);
     }
 
 
