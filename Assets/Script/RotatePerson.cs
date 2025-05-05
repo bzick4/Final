@@ -1,20 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RotatePerson : MonoBehaviour
 {
-   
+    [SerializeField] private GameObject _Level;
+    [SerializeField] private float _Angle;
+
     private void OnTriggerEnter(Collider other)
     {
-        
-
         if (other.CompareTag("Player"))
         {
-            other.transform.rotation = Quaternion.Euler(0, 90, 0);
-
+            _Level.transform.rotation = Quaternion.Euler(0, _Angle, 0);
             
-            Debug.Log("Player entered the trigger zone.");
         }
     }
+    
 }
+

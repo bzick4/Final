@@ -9,6 +9,7 @@ public class Controller : MonoBehaviour
     public Vector3 _horizontalMove {get; set;}
     private float _currentSpeed;
     private bool _isRun;
+    private bool _isAlive = true;
 
 
     [Header("Gravity")]
@@ -18,7 +19,7 @@ public class Controller : MonoBehaviour
     private float _fallStartHeight;
     private Vector3 _velocityMove;
     private bool _isGrounded;
-    private bool _isAlive=true;
+    
 
     // Script
     private Animator _animator => GetComponent<Animator>();
@@ -29,9 +30,11 @@ public class Controller : MonoBehaviour
     private SoundManager _soundManager => FindObjectOfType<SoundManager>();
     private Pause _pause => FindObjectOfType<Pause>();
 
+
     [SerializeField] private GameObject _PanelLose;
     [SerializeField] private GameObject _Cam1, _Cam2;
 
+    
     private void Awake()
     {
         _currentSpeed = _Speed;
@@ -91,15 +94,9 @@ public class Controller : MonoBehaviour
         _Cam2.SetActive(true);
     }
 
-
-
-
-    
-
     _animator.SetFloat("Lockomotion", _isRun ? 2f : Mathf.Abs(_horiz), 0.2f, Time.deltaTime);
     }
     }
-
 
     private void Jump()
 {
@@ -108,7 +105,7 @@ public class Controller : MonoBehaviour
 
     if (_isGrounded && _velocityMove.y < 0)
     {
-        _velocityMove.y = -2f; // Сбрасываем вертикальную скорость
+        _velocityMove.y = -2f;
     }
 
     if (Input.GetKeyDown(KeyCode.UpArrow) && _isGrounded  && _horizontalMove.x == 0)
@@ -153,11 +150,8 @@ public class Controller : MonoBehaviour
         }
    }
 
-
-    // Применяем гравитацию
     _velocityMove.y += _gravity * Time.deltaTime;
 
-    // Применяем движение
     _characterController.Move(_velocityMove * Time.deltaTime);
 }
 
@@ -179,7 +173,7 @@ public class Controller : MonoBehaviour
             _animator.SetBool("Falling", true);
         }
     }
-    // Если персонаж приземлился
+
     else if (_isGrounded)
     {
         if(_weaponEquipTwoHandedIK.weaponInHand == true)
