@@ -9,7 +9,7 @@ public class Shoot : MonoBehaviour
     [SerializeField] private float _BulletSpeed = 10;
 
     [SerializeField] private float _RayLength = 10f; // Длина рейкаста
-    [SerializeField] private LayerMask _HeroLayer; 
+     public LayerMask HeroLayer; 
 
     private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK => GetComponent<WeaponEquipTwoHandedIK>();
     private PoolObject _BulletPool=> FindObjectOfType<PoolObject>();
@@ -27,7 +27,7 @@ public class Shoot : MonoBehaviour
     {
         if(_weaponEquipTwoHandedIK != null)
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0) && _weaponEquipTwoHandedIK.weaponInHand) // ЛКМ для выстрела
+            if (Input.GetKeyDown(KeyCode.Mouse0) && _weaponEquipTwoHandedIK.weaponInHand)
         {
             ActiveShoot();
         }
@@ -63,7 +63,7 @@ public class Shoot : MonoBehaviour
     private void ShootEnemy()
     {
         Ray ray = new Ray(_FirePoint.position, _FirePoint.up);
-        if (Physics.Raycast(ray, out RaycastHit hit, _RayLength, _HeroLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, _RayLength, HeroLayer))
         {
             Debug.Log($"Raycast hit: {hit.collider.name}");
 

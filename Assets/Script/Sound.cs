@@ -24,6 +24,8 @@ public class Sound : MonoBehaviour
         _sound._SoundHeal.volume = _SliderSound.value;
         _sound._SoundDeath.volume = _SliderSound.value;
         _sound._SoundClick.volume = _SliderSound.value;
+        _sound._SoundGameOver.volume = _SliderSound.value;
+        _sound._SoundFinish.volume = _SliderSound.value;
     }
 
     public void Save()

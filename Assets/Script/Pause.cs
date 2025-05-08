@@ -7,6 +7,12 @@ public class Pause : MonoBehaviour
 
     private bool isPause = false;
 
+private void Awake()
+{
+    PauseOn();
+}
+    
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -86,6 +92,9 @@ public class Pause : MonoBehaviour
         controller.enabled = false;
     }
 
+     _soundManager._SoundGame.Pause();
+
+
      
     }
 
@@ -143,18 +152,19 @@ public class Pause : MonoBehaviour
         controller.enabled = true;
     }
 
-   
+     _soundManager._SoundGame.Play();
     
     }
 
 
-    private void PauseOn()
+    public void PauseOn()
     {
-         _soundManager._SoundGame.Pause();
+         //_soundManager._SoundGame.Pause();
+         _soundManager._SoundGame.Stop();
       _soundManager._SoundMenu.Play();
         ScriptOff();
     }
-    private void PauseOff()
+    public void PauseOff()
     {
         _soundManager._SoundGame.Play();
     _soundManager._SoundMenu.Stop();

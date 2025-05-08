@@ -1,5 +1,6 @@
-using Unity.VisualScripting;
+using System.Collections;
 using UnityEngine;
+
 
 public class Controller : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class Controller : MonoBehaviour
     [SerializeField] private float _Speed = 3f;
     [SerializeField] private float  _RunSpeed = 5f;
     public Vector3 _horizontalMove {get; set;}
+    private float _horiz;
     private float _currentSpeed;
     private bool _isRun;
     private bool _isAlive = true;
@@ -24,6 +26,7 @@ public class Controller : MonoBehaviour
     // Script
     private Animator _animator => GetComponent<Animator>();
     public CharacterController _characterController => GetComponent<CharacterController>();
+    private CapsuleCollider _capsuleCollider => GetComponent<CapsuleCollider>();
     private WeaponEquipTwoHandedIK _weaponEquipTwoHandedIK => GetComponent<WeaponEquipTwoHandedIK>();
     private RagdollHandler _ragdollHandler => GetComponentInChildren<RagdollHandler>();
     private Health _health => GetComponent<Health>();
@@ -32,7 +35,7 @@ public class Controller : MonoBehaviour
 
 
     [SerializeField] private GameObject _PanelLose;
-    [SerializeField] private GameObject _Cam1, _Cam2;
+
 
     
     private void Awake()
@@ -51,13 +54,14 @@ public class Controller : MonoBehaviour
         Falling();
         PlayerMovement();
         Jump();
+        Slide();
     }
 
     private void PlayerMovement()
     {
         if (_isAlive)
         {
-            float _horiz = Input.GetAxis("Horizontal");
+            _horiz = Input.GetAxis("Horizontal");
 
             
             if (_weaponEquipTwoHandedIK.weaponInHand)
@@ -74,24 +78,20 @@ public class Controller : MonoBehaviour
             _currentSpeed = _isRun ? _RunSpeed : _Speed;
              _horizontalMove = transform.forward * _horiz * _currentSpeed;
             
-            //_horizontalMove = new Vector3(0, 0, _horiz * _currentSpeed);
-            //_characterController.Move(_horizontalMove * Time.deltaTime);
 
     
     if (_horiz > 0)
     {
         transform.rotation = Quaternion.Euler(0, 0, 0);
         _characterController.Move(_horizontalMove * Time.deltaTime);
-        _Cam1.SetActive(true);
-        _Cam2.SetActive(false);
+       
         
     }
     else if (_horiz < 0)
     {
         transform.rotation = Quaternion.Euler(0, -180, 0);
         _characterController.Move(-_horizontalMove * Time.deltaTime);
-        _Cam1.SetActive(false);
-        _Cam2.SetActive(true);
+       
     }
 
     _animator.SetFloat("Lockomotion", _isRun ? 2f : Mathf.Abs(_horiz), 0.2f, Time.deltaTime);
@@ -232,7 +232,8 @@ public class Controller : MonoBehaviour
             Debug.Log("Dead");
 
             _ragdollHandler.EnableRagdoll();
-            _soundManager.SoundDeath();
+            _soundManager._SoundDeath.Play();
+            _soundManager._SoundGame.Stop();
             Invoke(nameof(GameOver), 0.8f);
 
         }
@@ -240,10 +241,36 @@ public class Controller : MonoBehaviour
 
     private void GameOver()
     {
-        _soundManager.SoundGameOver();
+        _soundManager._SoundGameOver.Play();
         _PanelLose.SetActive(true);
         _pause.ScriptOff();
     }
 
+private void Slide()
+{
+    if(Input.GetKeyDown(KeyCode.DownArrow) && _isGrounded && _horiz > 0)
+    {
+        StartCoroutine(SlideCoroutine());
+        _animator.SetTrigger("Slide");
+    }
+    if (Input.GetKeyDown(KeyCode.DownArrow) && _isGrounded && _horiz < 0)
+    {
+        StartCoroutine(SlideCoroutine());
+        _animator.SetTrigger("Slide");
+    }
+}
+
+private IEnumerator SlideCoroutine()
+{
+    _characterController.center = new Vector3(0, 0.3f, 0);
+    _characterController.height = 0f;
+    _capsuleCollider.enabled = false;
+    _capsuleCollider.center = new Vector3(0, 0f, 0);
+    yield return new WaitForSeconds(1.4f);
+    _characterController.center = new Vector3(0, 1.03f, 0);
+    _capsuleCollider.enabled = true;
+   _capsuleCollider.center = new Vector3(0, 1.03f, 0);
+    _characterController.height = 1.92f;
+}
 
 }

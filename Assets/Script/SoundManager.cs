@@ -2,17 +2,29 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-   public AudioSource _SoundMenu, _SoundGame, 
-                    _SoundClick, _SoundHit, 
+   public AudioSource _SoundMenu, _SoundGame, _SoundMeme,
+                    _SoundClick, _SoundHit, _SoundFinish,
                     _SoundHeal, _SoundDeath, _SoundGameOver;
 
     
+
+    
+    public void SoundMeme()
+    {
+        _SoundMeme.Play();
+    }
 
     
     public void SoundHeal()
     {
         _SoundHeal.Play();
     }
+
+    public void SoundFinish()
+    {
+        _SoundFinish.Play();
+    }
+
 
     public void SoundHit()
     {

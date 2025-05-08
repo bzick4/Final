@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     private Points _points => FindAnyObjectByType<Points>();
     private KillEnemy _killEnemy => FindAnyObjectByType<KillEnemy>();
     private SoundManager _soundManager => FindAnyObjectByType<SoundManager>();
+    private Shoot _shoot => GetComponent<Shoot>();
 
     private bool _isDead = false;
 
@@ -38,7 +39,6 @@ public class Enemy : MonoBehaviour
         {
             Health.OnDamage -= Dead;
         }
-    
     }
     
     private void Dead()
@@ -46,9 +46,10 @@ public class Enemy : MonoBehaviour
         if (_enemyHealth._currentHealth <=0 && !_isDead)
         {
             _enemyCollider.enabled = false;
+            _shoot.HeroLayer = 0;
 
             _isDead = true;
-            int _randomLoot = Random.Range(0,3);
+            int _randomLoot = Random.Range(0,2);
              int _randomPoints = Random.Range(100, 301);
              
              _enemyAnimator.enabled = false;
