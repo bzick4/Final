@@ -72,7 +72,7 @@ public class Controller : MonoBehaviour
 
             else
             {
-                _isRun = Input.GetKey(KeyCode.RightShift);
+                _isRun = Input.GetKey(KeyCode.LeftShift);
             }
             
             _currentSpeed = _isRun ? _RunSpeed : _Speed;
@@ -108,7 +108,7 @@ public class Controller : MonoBehaviour
         _velocityMove.y = -2f;
     }
 
-    if (Input.GetKeyDown(KeyCode.UpArrow) && _isGrounded  && _horizontalMove.x == 0)
+    if (Input.GetKeyDown(KeyCode.W) && _isGrounded  && _horizontalMove.x == 0)
     {
        _velocityMove.y = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
 
@@ -122,7 +122,7 @@ public class Controller : MonoBehaviour
         }
     }
 
-     if (Input.GetKeyDown(KeyCode.UpArrow) && _isGrounded && _horizontalMove.x > 0)
+     if (Input.GetKeyDown(KeyCode.W) && _isGrounded && _horizontalMove.x > 0 || Input.GetKeyDown(KeyCode.UpArrow) && _isGrounded && _horizontalMove.x < 0)
      {
        _velocityMove.y = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
     
@@ -136,19 +136,19 @@ public class Controller : MonoBehaviour
         }
      }  
 
-     if(Input.GetKeyDown(KeyCode.UpArrow) && _isGrounded && _horizontalMove.x < 0)
-     {
-       _velocityMove.y = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
+//      if(Input.GetKeyDown(KeyCode.UpArrow) && _isGrounded && _horizontalMove.x < 0)
+//      {
+//        _velocityMove.y = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
     
-      if (_weaponEquipTwoHandedIK.weaponInHand == true)
-        {
-            _animator.SetTrigger("RunJumpWeapon");
-        }
-        else
-        {
-            _animator.SetTrigger("RunJump");
-        }
-   }
+//       if (_weaponEquipTwoHandedIK.weaponInHand == true)
+//         {
+//             _animator.SetTrigger("RunJumpWeapon");
+//         }
+//         else
+//         {
+//             _animator.SetTrigger("RunJump");
+//         }
+//    }
 
     _velocityMove.y += _gravity * Time.deltaTime;
 
@@ -248,12 +248,7 @@ public class Controller : MonoBehaviour
 
 private void Slide()
 {
-    if(Input.GetKeyDown(KeyCode.DownArrow) && _isGrounded && _horiz > 0)
-    {
-        StartCoroutine(SlideCoroutine());
-        _animator.SetTrigger("Slide");
-    }
-    if (Input.GetKeyDown(KeyCode.DownArrow) && _isGrounded && _horiz < 0)
+    if(Input.GetKeyDown(KeyCode.S) && _isGrounded && _horiz > 0 || Input.GetKeyDown(KeyCode.S) && _isGrounded && _horiz < 0)
     {
         StartCoroutine(SlideCoroutine());
         _animator.SetTrigger("Slide");

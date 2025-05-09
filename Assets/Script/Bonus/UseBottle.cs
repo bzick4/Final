@@ -22,7 +22,7 @@ public class UseBottle : MonoBehaviour
     
     private void DrinkHealBottle()
     {
-        if (Input.GetKeyDown(KeyCode.I) && _totalBottle.TotalHealBottle > 0)
+        if (Input.GetKeyDown(KeyCode.Q) && _totalBottle.TotalHealBottle > 0)
         {
             _healBottle.Remove(1);
             CureHero();
